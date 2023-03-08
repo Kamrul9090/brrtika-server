@@ -66,13 +66,21 @@ async function run() {
         app.get('/add_books', async (req, res) => {
             const query = {};
             const result = await addBooksCollection.find(query).toArray();
-            res.send(result)
+            const filterBooks = result.filter(book => book.type === "donation");
+            res.send(filterBooks)
+        })
+        app.get('/seller_books', async (req, res) => {
+            const query = {};
+            const result = await addBooksCollection.find(query).toArray();
+            const filterBooks = result.filter(book => book.type === "sell");
+            res.send(filterBooks)
         })
 
         app.post('/add_books', async (req, res) => {
             const book = req.body;
             console.log(book);
             const result = await addBooksCollection.insertOne(book);
+            res.send(result)
         })
 
         app.post('/category', async (req, res) => {
