@@ -51,6 +51,12 @@ async function run() {
                 return res.send({ message: "data not found" })
             }
         })
+        app.get('/books', async (req, res) => {
+            const query = {};
+            const books = await booksCollection.find(query).toArray();
+            const filterData = books.map(filter => filter.data[3])
+            res.send(filterData)
+        })
 
         app.get('/category/:id', async (req, res) => {
             const id = req.params.id;
@@ -61,6 +67,7 @@ async function run() {
             const findBooks = books.find(books => books.category_id === bookCategory.category);
             res.send(findBooks)
         })
+
 
 
         app.get('/add_books', async (req, res) => {
@@ -74,6 +81,12 @@ async function run() {
             const result = await addBooksCollection.find(query).toArray();
             const filterBooks = result.filter(book => book.type === "sell");
             res.send(filterBooks)
+        })
+        app.get('/seller_books/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const result = await addBooksCollection.findOne(filter);
+            res.send(result)
         })
 
         app.post('/add_books', async (req, res) => {
